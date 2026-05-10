@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorGris">#656565</color>
+
+    <color name="colorPrimary">#673AB7</color>
+    <color name="colorAppPrimary">#512DA8</color>
+    <color name="colorAppLight">#E040FB</color>
+
+    <color name="colorBlanco">#FFFFFFFF</color>
+    <color name="colorSplash">#ff6f00</color>
+    <color name="colorNegro">#FF000000</color>
+
+    <color name="tab_indicator_gray">#c0c0c0</color>
+    <color name="intro_title_color">#000000</color>
+    <color name="intro_description_color">#656565</color>
+    <color name="gradient_start_color">#4c84ff</color>
+    <color name="gradient_end_color">#18a3fe</color>
+
+    <color name="colorRedondeadoGris">#f1f1f3</color>
+
+    <color name="colorRojo">#C8FF0000</color>
+    <color name="colorVerde">#4CAF50</color>
+    <color name="colorCerradoTransparente">#A6818181</color>
+    <color name="colorRojoCarrito">#C8FF0000</color>
+
+    <color name="colorCremaV1">#fffff4</color>
+    <color name="colorCerrado">#ff6f60</color>
+
+    <color name="barraProgreso">#ff3d4d</color>
+    <color name="verdeSuccess">#A5DC86</color>
+    <color name="gris616161">#616161</color>
+    <color name="grisAAA">#aaa</color>
+
+
+
+
+
+
+
+
+
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+    <color name="colorPrimaryDark">#FF000000</color>
+    <color name="colorAccent">#448AFF</color>
+
+    <color name="colorAzul">#448AFF</color>
+
+
+    <color name="colorLetraPrincipal">#0D2C55</color>
+    <color name="colorLetraGris">#9E9E9E</color>
+    <color name="colorGrisIcono">#656565</color>
+
+
+    <color name="colorNaranja">#FF3D00</color>
+
+
+    <color name="colorGrisv1">#616161</color>
+    <color name="colorGrisv2">#4E4A4A</color>
+    <color name="colorLetraGrisV5">#474747</color>
+
+
+
+    <color name="colorLetraRoja">#D32F2F</color>
+
+
+    <color name="ucrop_color_toolbar_widget">#FFFFFF</color>
+
+    <color name="colorRojoCategoria">#66FF0000</color>
+    <color name="colorVerdeCategoria">#6677FF00</color>
+
+    <!-- colors for tab and screent text -->
+
+
+    <color name="tansparentColor">#00FFFFFF</color>
+
+    <color name="pinkColor">#FF003B</color>
+
+
+    <color name="transparente">#00000000</color>
+
+
+
+
+
+
+    <color name="colorRojoApp">#d84b4b</color>
+
+
+
+
+</resources>
