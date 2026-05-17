@@ -2,7 +2,6 @@ package com.tatanstudios.eltuncazometapan.vistas.login
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Patterns
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

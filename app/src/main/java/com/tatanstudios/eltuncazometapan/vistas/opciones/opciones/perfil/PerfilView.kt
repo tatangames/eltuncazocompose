@@ -49,10 +49,6 @@ import com.tatanstudios.eltuncazometapan.model.rutas.Routes
 sealed class Opcion(val icon: ImageVector?, open val label: String) {
     object Direcciones : Opcion(Icons.Default.FormatListNumbered, "Direcciones")
     object CambioPassword : Opcion(Icons.Default.Schedule, "Cambio de Contraseña")
-    object Perfil : Opcion(Icons.Default.Person, "Perfil")
-    object Horarios : Opcion(Icons.Default.History, "Horarios")
-    object HistorialCompra : Opcion(Icons.Default.History, "Historial de Compras")
-    object Premios : Opcion(Icons.Default.Star, "Premios")
     object CerrarSesion : Opcion(Icons.AutoMirrored.Default.Logout, "Cerrar Sesión")
 }
 

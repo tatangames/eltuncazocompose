@@ -48,6 +48,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material3.Icon
 import com.tatanstudios.eltuncazometapan.componentes.BarraToolbarColorParaListaOrdenes
 import com.tatanstudios.eltuncazometapan.extras.TokenManager
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloOrdenesArray
@@ -108,133 +114,159 @@ fun ListadoOrdenesScreen(
                 .pullRefresh(pullRefreshState)
         ) {
             if (datosCargados) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        start = 12.dp,
-                        end = 12.dp,
-                        top = 12.dp,
-                        bottom = innerPadding.calculateBottomPadding() + 72.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(
-                        items = modeloOrdenesArray,
-                        key = { it.id }
-                    ) { orden ->
-                        val esCancelada = orden.estadoCancelada == 1
+                if (modeloOrdenesArray.isEmpty()) {
+                    // Estado vacío
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.ShoppingCart,
+                            contentDescription = null,
+                            modifier = Modifier.size(72.dp),
+                            tint = Color.LightGray
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "No tienes órdenes",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.Gray,
+                            fontSize = 18.sp
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Tus pedidos aparecerán aquí",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.LightGray,
+                            fontSize = 14.sp
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(
+                            start = 12.dp,
+                            end = 12.dp,
+                            top = 12.dp,
+                            bottom = innerPadding.calculateBottomPadding() + 72.dp
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(
+                            items = modeloOrdenesArray,
+                            key = { it.id }
+                        ) { orden ->
+                            val esCancelada = orden.estadoCancelada == 1
 
-                        val coloresBoton = if (esCancelada) {
-                            ButtonDefaults.buttonColors(
-                                containerColor = colorResource(R.color.colorLetraRoja),
-                                contentColor = Color.White
-                            )
-                        } else {
-                            ButtonDefaults.buttonColors(
-                                containerColor = colorResource(R.color.colorVerde),
-                                contentColor = Color.White
-                            )
-                        }
+                            val coloresBoton = if (esCancelada) {
+                                ButtonDefaults.buttonColors(
+                                    containerColor = colorResource(R.color.colorLetraRoja),
+                                    contentColor = Color.White
+                                )
+                            } else {
+                                ButtonDefaults.buttonColors(
+                                    containerColor = colorResource(R.color.colorVerde),
+                                    contentColor = Color.White
+                                )
+                            }
 
-                        // Si es cancelada, el card NO es clickeable
-                        val cardModifier = if (esCancelada) {
-                            Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                        } else {
-                            Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                                .clickable {
-                                    navController.navigate(
-                                        Routes.VistaEstadoOrden.createRoute(orden.id)
-                                    ) { launchSingleTop = true }
-                                }
-                        }
-
-                        Card(
-                            modifier = cardModifier,
-                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.White)
-                        ) {
-                            Column(
-                                modifier = Modifier
+                            val cardModifier = if (esCancelada) {
+                                Modifier
                                     .fillMaxWidth()
-                                    .padding(14.dp),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                            } else {
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .clickable {
+                                        navController.navigate(
+                                            Routes.VistaEstadoOrden.createRoute(orden.id)
+                                        ) { launchSingleTop = true }
+                                    }
+                            }
+
+                            Card(
+                                modifier = cardModifier,
+                                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color.White)
                             ) {
-                                Text(
-                                    text = "#Orden: ${orden.id}",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Color.Black,
-                                    fontSize = 16.sp
-                                )
-                                Text(
-                                    text = "Fecha: ${orden.fechaOrden ?: "-"}",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Color.Black,
-                                    fontSize = 16.sp
-
-                                )
-                                Text(
-                                    text = "Total: " + orden.total,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Color.Black,
-                                    fontSize = 16.sp
-                                )
-                                Text(
-                                    text = "Dirección: ${orden.direccion ?: "-"}",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontSize = 16.sp,
-                                    color = Color.Black,
-                                )
-                                Text(
-                                    text = "Estado: ${orden.estado ?: ""}",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Color.Black,
-                                    fontSize = 17.sp
-                                )
-
-
-                                if (!orden.notaOrden.isNullOrBlank()) {
-                                    Text(
-                                        text = "Nota: " + orden.notaOrden,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                }
-
-                                if (esCancelada) {
-                                    Text(
-                                        text = "Cancelada: " + orden.mensajeCancelado,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = Color.Red,
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                }
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.End
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(14.dp),
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
-                                    Button(
-                                        onClick = {
-                                            if (esCancelada) {
-                                                // Solo el botón ejecuta la acción de borrar
-                                                viewModelOcultarOrden.ocultarOrdenRetrofit(orden.id)
-                                            } else {
-                                                navController.navigate(
-                                                    Routes.VistaEstadoOrden.createRoute(orden.id)
-                                                ) { launchSingleTop = true }
-                                            }
-                                        },
-                                        colors = coloresBoton,
-                                        shape = RoundedCornerShape(12.dp),
-                                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                                    Text(
+                                        text = "#Orden: ${orden.id}",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = Color.Black,
+                                        fontSize = 16.sp
+                                    )
+                                    Text(
+                                        text = "Fecha: ${orden.fechaOrden ?: "-"}",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = Color.Black,
+                                        fontSize = 16.sp
+                                    )
+                                    Text(
+                                        text = "Total: " + orden.total,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = Color.Black,
+                                        fontSize = 16.sp
+                                    )
+                                    Text(
+                                        text = "Dirección: ${orden.direccion ?: "-"}",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontSize = 16.sp,
+                                        color = Color.Black,
+                                    )
+                                    Text(
+                                        text = "Estado: ${orden.estado ?: ""}",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = Color.Black,
+                                        fontSize = 17.sp
+                                    )
+
+                                    if (!orden.notaOrden.isNullOrBlank()) {
+                                        Text(
+                                            text = "Nota: " + orden.notaOrden,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+
+                                    if (esCancelada) {
+                                        Text(
+                                            text = "Cancelada: " + orden.mensajeCancelado,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            color = Color.Red,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.End
                                     ) {
-                                        Text(text = if (esCancelada) "Borrar orden" else "Ver orden")
+                                        Button(
+                                            onClick = {
+                                                if (esCancelada) {
+                                                    viewModelOcultarOrden.ocultarOrdenRetrofit(orden.id)
+                                                } else {
+                                                    navController.navigate(
+                                                        Routes.VistaEstadoOrden.createRoute(orden.id)
+                                                    ) { launchSingleTop = true }
+                                                }
+                                            },
+                                            colors = coloresBoton,
+                                            shape = RoundedCornerShape(12.dp),
+                                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                                        ) {
+                                            Text(text = if (esCancelada) "Borrar orden" else "Ver orden")
+                                        }
                                     }
                                 }
                             }

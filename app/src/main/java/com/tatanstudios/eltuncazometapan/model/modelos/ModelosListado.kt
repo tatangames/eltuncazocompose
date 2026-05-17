@@ -414,6 +414,7 @@ data class ModeloProductosDeOrdenArray(
     @SerializedName("nota") val nota: String?,
     @SerializedName("precio") val precio: String?,
     @SerializedName("nombreproducto") val nombreproducto: String?,
+    @SerializedName("nombre") val nombre: String?,
     @SerializedName("idordendescrip") val idordendescrip: Int,
     @SerializedName("utiliza_imagen") val utiliza_imagen: Int,
     @SerializedName("imagen") val imagen: String?,

@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.flow.first
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -44,30 +43,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
 import androidx.compose.material.TabRowDefaults.Divider
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import com.tatanstudios.eltuncazometapan.componentes.BarraToolbarColorOrdenesEstado
 import com.tatanstudios.eltuncazometapan.componentes.CustomModal1BotonTitulo
 import com.tatanstudios.eltuncazometapan.componentes.CustomModal2Botones
-import com.tatanstudios.eltuncazometapan.extras.TokenManager
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloOrdenesIndividualArray
-import com.tatanstudios.eltuncazometapan.viewmodel.CalificarOrdenViewModel
 import com.tatanstudios.eltuncazometapan.viewmodel.CancelarOrdenViewModel
+import com.tatanstudios.eltuncazometapan.viewmodel.CompletarOrdenViewModel
 import com.tatanstudios.eltuncazometapan.viewmodel.InformacionDeUnaOrdenViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -77,10 +67,9 @@ fun EstadoOrdenScreen(
     idorden: Int,
     viewModel: InformacionDeUnaOrdenViewModel = viewModel(),
     viewModelCancelar: CancelarOrdenViewModel = viewModel(),
-    viewModelCalificar: CalificarOrdenViewModel = viewModel(),
+    viewModelCompletar: CompletarOrdenViewModel = viewModel(),
 ) {
     val ctx = LocalContext.current
-    val tokenManager = remember { TokenManager(ctx) }
 
     val isLoading by viewModel.isLoading.observeAsState(true)
     val resultado by viewModel.resultado.observeAsState()
@@ -88,32 +77,22 @@ fun EstadoOrdenScreen(
     val isLoadingCancelar by viewModelCancelar.isLoading.observeAsState(false)
     val resultadoCancelar by viewModelCancelar.resultado.observeAsState()
 
-    val isLoadingCalificar by viewModelCalificar.isLoading.observeAsState(false)
-    val resultadoCalificar by viewModelCalificar.resultado.observeAsState()
+    val isLoadingCompletar by viewModelCompletar.isLoading.observeAsState(false)
+    val resultadoCompletar by viewModelCompletar.resultado.observeAsState()
 
     var modeloOrdenesArray by remember { mutableStateOf(listOf<ModeloOrdenesIndividualArray>()) }
 
-    // cargar datos cuando cambia el id
     LaunchedEffect(idorden) {
         viewModel.informacionOrdenIndividualRetrofit(idorden)
     }
 
-    var showRatingDialog by rememberSaveable { mutableStateOf(false) }
-    var rating by rememberSaveable { mutableIntStateOf(1) } // ⭐ por defecto y mínima
-
     var showModalCancelarOrden by rememberSaveable { mutableStateOf(false) }
+    var showModalCompletarOrden by rememberSaveable { mutableStateOf(false) }
 
     var showModalOrdenYaFueIniciada by rememberSaveable { mutableStateOf(false) }
     var tituloOrdenYaIniciada by rememberSaveable { mutableStateOf("") }
     var mensajeOrdenYaIniciada by rememberSaveable { mutableStateOf("") }
 
-
-    var showModalCalificar by rememberSaveable { mutableStateOf(false) }
-    var tituloOrdenCalificada by rememberSaveable { mutableStateOf("") }
-    var mensajeOrdenCalificada by rememberSaveable { mutableStateOf("") }
-
-
-    // estado de refresco
     var refreshing by remember { mutableStateOf(false) }
 
     fun recargar() {
@@ -136,9 +115,8 @@ fun EstadoOrdenScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .pullRefresh(pullRefreshState) // 👈 habilita “jalón para recargar”
+                .pullRefresh(pullRefreshState)
         ) {
-            // Contenido con scroll
             if (isLoading && !refreshing) {
                 LoadingModal(isLoading = true)
             } else {
@@ -152,12 +130,10 @@ fun EstadoOrdenScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(rememberScrollState()) // 👈 scroll vertical
+                            .verticalScroll(rememberScrollState())
                             .padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // ===========================
-
                         Text(
                             text = "Orden #: ${orden.id}",
                             style = MaterialTheme.typography.titleLarge,
@@ -165,40 +141,32 @@ fun EstadoOrdenScreen(
                             color = Color.Black
                         )
 
+                        // Botones: Productos + Cancelar (solo si no fue iniciada)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             Button(
                                 onClick = {
-
                                     navController.navigate(
                                         Routes.VistaListaProductosDeOrden.createRoute(orden.id)
-                                    ) {
-                                        launchSingleTop = true
-                                    }
-
+                                    ) { launchSingleTop = true }
                                 },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF1565C0), // Azul
+                                    containerColor = Color(0xFF1565C0),
                                     contentColor = Color.White
                                 )
                             ) { Text("Productos") }
 
                             if (orden.estadoIniciada == 0) {
                                 Button(
-                                    onClick = {
-
-                                        // == CANCELAR ORDEN ==
-                                        showModalCancelarOrden = true
-
-                                    },
+                                    onClick = { showModalCancelarOrden = true },
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(12.dp),
                                     colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color(0xFFD32F2F), // Rojo
+                                        containerColor = Color(0xFFD32F2F),
                                         contentColor = Color.White
                                     )
                                 ) { Text("Cancelar") }
@@ -208,44 +176,25 @@ fun EstadoOrdenScreen(
                         Divider()
 
                         Text(
-                            text = "Estados",
+                            text = "Estado",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Medium
                         )
 
+                        // Solo el estado de iniciada
                         EstadoItem(
                             titulo = if (orden.estadoIniciada == 1)
                                 (orden.textoIniciada?.takeIf { it.isNotBlank() } ?: "Orden iniciada")
                             else
-                                "Esperando Iniciar Orden",
+                                "Esperando iniciar orden",
                             activo = orden.estadoIniciada == 1,
-                            fecha = orden.fechaEstimadaTxt
+                            fecha = if (orden.estadoIniciada == 1) orden.fechaEstimadaTxt else null
                         )
 
-                        EstadoItem(
-                            titulo = if (orden.estadoCamino == 1)
-                                ("Motorista en Camino")
-                            else
-                                "En espera",
-                            activo = orden.estadoCamino == 1,
-                            fecha = orden.fechaCaminoTxt
-                        )
-
-                        EstadoItem(
-                            titulo = if (orden.estadoEntregada == 1)
-                                ("Orden Entregada")
-                            else
-                                "En espera",
-                            activo = orden.estadoEntregada == 1,
-                            fecha = orden.fechaEntregadaTxt
-                        )
-
-                        if (orden.estadoEntregada == 1) {
+                        // Botón Completar: solo cuando la orden fue iniciada
+                        if (orden.estadoIniciada == 1) {
                             Button(
-                                onClick = {
-                                    rating = 1             // siempre inicia en 1
-                                    showRatingDialog = true
-                                },
+                                onClick = { showModalCompletarOrden = true },
                                 modifier = Modifier
                                     .fillMaxWidth(0.7f)
                                     .align(Alignment.CenterHorizontally),
@@ -255,9 +204,10 @@ fun EstadoOrdenScreen(
                                     contentColor = Color.White
                                 ),
                                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
-                            ) { Text("Finalizar orden") }
+                            ) { Text("Completar") }
                         }
 
+                        // Estado cancelada si aplica
                         if (orden.estadoCancelada == 1) {
                             EstadoItem(
                                 titulo = "Cancelada",
@@ -279,88 +229,66 @@ fun EstadoOrdenScreen(
                 }
             }
 
-            // Indicador de “pull to refresh”
             PullRefreshIndicator(
                 refreshing = refreshing,
                 state = pullRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
 
-            if(refreshing){
-                LoadingModal(isLoading = true)
-            }
+            if (refreshing) LoadingModal(isLoading = true)
+            if (isLoadingCancelar) LoadingModal(isLoading = true)
+            if (isLoadingCompletar) LoadingModal(isLoading = true)
 
-            if(isLoadingCancelar){
-                LoadingModal(isLoading = true)
-            }
-
-            if(isLoadingCalificar){
-                LoadingModal(isLoading = true)
-            }
-
-            if(showModalCancelarOrden){
+            // Modal cancelar orden
+            if (showModalCancelarOrden) {
                 CustomModal2Botones(
                     showDialog = true,
                     message = stringResource(R.string.cancelar_orden),
                     onDismiss = { showModalCancelarOrden = false },
                     onAccept = {
                         showModalCancelarOrden = false
-
-                            viewModelCancelar.cancelarOrdenRetrofit(
-                                idorden
-                            )
+                        viewModelCancelar.cancelarOrdenRetrofit(idorden)
                     },
                     stringResource(R.string.si),
                     stringResource(R.string.no),
                 )
             }
 
-            if (showRatingDialog) {
-                RatingDialog(
-                    rating = rating,
-                    onRatingChange = { new ->
-                        rating = new.coerceAtLeast(1) // mínimo 1
+            // Modal completar orden
+            if (showModalCompletarOrden) {
+                CustomModal2Botones(
+                    showDialog = true,
+                    message = "¿Deseas finalizar esta orden?",
+                    onDismiss = { showModalCompletarOrden = false },
+                    onAccept = {
+                        showModalCompletarOrden = false
+                        viewModelCompletar.completarOrdenRetrofit(idorden)
                     },
-                    onConfirm = {
-                        showRatingDialog = false
-                        // TODO: Llama a tu ViewModel para enviar la calificación
-                        viewModelCalificar.calificarOrdenRetrofit(idorden,rating)
-                    },
-                    onCancel = { showRatingDialog = false }
+                    stringResource(R.string.si),
+                    stringResource(R.string.no),
                 )
             }
 
-            if(showModalOrdenYaFueIniciada){
-                CustomModal1BotonTitulo(showModalOrdenYaFueIniciada, tituloOrdenYaIniciada, mensajeOrdenYaIniciada, onDismiss = {
-                    showModalOrdenYaFueIniciada = false
-                    viewModel.informacionOrdenIndividualRetrofit(idorden)
-                })
-            }
-
-            if(showModalCalificar){
-                CustomModal1BotonTitulo(showModalCalificar, tituloOrdenCalificada, mensajeOrdenCalificada, onDismiss = {
-                    showModalCalificar = false
-
-                    // SALIR
-                    navController.navigate(Routes.VistaPrincipal.createRoute("ordenes")
-                    ) {
-                        popUpTo(Routes.VistaEstadoOrden.route) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
+            // Modal respuesta de cancelar (cuando el restaurante ya inició)
+            if (showModalOrdenYaFueIniciada) {
+                CustomModal1BotonTitulo(
+                    showModalOrdenYaFueIniciada,
+                    tituloOrdenYaIniciada,
+                    mensajeOrdenYaIniciada,
+                    onDismiss = {
+                        showModalOrdenYaFueIniciada = false
+                        viewModel.informacionOrdenIndividualRetrofit(idorden)
                     }
-                })
+                )
             }
         }
     }
 
-
-    // manejar resultado retrofit
+    // Resultado: cargar orden
     resultado?.getContentIfNotHandled()?.let { result ->
         refreshing = false
         if (result.success == 1) {
             modeloOrdenesArray = result.ordenes
-
         } else {
             CustomToasty(
                 ctx,
@@ -370,35 +298,23 @@ fun EstadoOrdenScreen(
         }
     }
 
-
-    // manejar resultado retrofit
+    // Resultado: cancelar orden
     resultadoCancelar?.getContentIfNotHandled()?.let { result ->
-
         when (result.success) {
-
             1 -> {
-                // ORDEN YA FUE INICIADA POR RESTAURANTE
-                val titulo = result.titulo ?: ""
-                val mensaje = result.mensaje ?: ""
-                tituloOrdenYaIniciada = titulo
-                mensajeOrdenYaIniciada = mensaje
+                tituloOrdenYaIniciada = result.titulo ?: ""
+                mensajeOrdenYaIniciada = result.mensaje ?: ""
                 showModalOrdenYaFueIniciada = true
             }
             2 -> {
-                // ORDEN CANCELADA CORRECTAMENTE
-               // val titulo = result.titulo ?: ""
-              //  val mensaje = result.mensaje ?: ""
-
                 CustomToasty(
                     ctx,
                     stringResource(id = R.string.orden_cancelada),
                     ToastType.SUCCESS
                 )
-
                 navController.popBackStack()
             }
             else -> {
-                // Error, mostrar Toast
                 CustomToasty(
                     ctx,
                     stringResource(id = R.string.error_reintentar_de_nuevo),
@@ -408,17 +324,18 @@ fun EstadoOrdenScreen(
         }
     }
 
-
-    resultadoCalificar?.getContentIfNotHandled()?.let { result ->
-        refreshing = false
+    // Resultado: completar orden
+    resultadoCompletar?.getContentIfNotHandled()?.let { result ->
         if (result.success == 1) {
-            val titulo = result.titulo ?: ""
-            val mensaje = result.mensaje ?: ""
-
-            tituloOrdenYaIniciada = titulo
-            mensajeOrdenCalificada = mensaje
-            showModalCalificar = true
-
+            CustomToasty(
+                ctx,
+                "Orden completada",
+                ToastType.SUCCESS
+            )
+            navController.navigate(Routes.VistaPrincipal.createRoute("ordenes")) {
+                popUpTo(Routes.VistaEstadoOrden.route) { inclusive = true }
+                launchSingleTop = true
+            }
         } else {
             CustomToasty(
                 ctx,
@@ -429,59 +346,6 @@ fun EstadoOrdenScreen(
     }
 }
 
-
-@Composable
-private fun RatingDialog(
-    rating: Int,
-    onRatingChange: (Int) -> Unit,
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onCancel,
-        title = { Text("Califica tu experiencia") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(
-                    "Selecciona de 1 a 5 estrellas",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    (1..5).forEach { i ->
-                        IconButton(onClick = { onRatingChange(i) }) {
-                            Icon(
-                                imageVector = if (i <= rating) Icons.Filled.Star else Icons.Outlined.Star,
-                                contentDescription = "$i estrellas",
-                                tint = if (i <= rating) Color(0xFFFFC107) else Color.LightGray,
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF2E7D32),
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ) { Text("Enviar") }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onCancel,
-                colors = ButtonDefaults.textButtonColors(contentColor = Color.Black),
-                shape = RoundedCornerShape(12.dp)
-            ) { Text("Cancelar") }
-        }
-    )
-}
 
 @Composable
 private fun EstadoItem(
@@ -521,4 +385,3 @@ private fun EstadoItem(
         }
     }
 }
-

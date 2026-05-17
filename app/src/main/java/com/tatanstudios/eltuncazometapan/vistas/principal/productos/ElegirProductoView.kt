@@ -41,7 +41,6 @@ import com.tatanstudios.eltuncazometapan.componentes.CustomToasty
 import com.tatanstudios.eltuncazometapan.componentes.LoadingModal
 import com.tatanstudios.eltuncazometapan.componentes.ToastType
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add

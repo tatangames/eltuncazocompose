@@ -16,7 +16,6 @@ class TokenManager(private val context: Context) {
     // Claves
     private val ID_KEY = stringPreferencesKey("ID")
     private val DEDOS_KEY = stringPreferencesKey("DEDOS")
-    private val MAPA_KEY = stringPreferencesKey("MAPA")
 
     // Guardar ID en DataStore
     suspend fun saveID(id: String) {
@@ -29,13 +28,6 @@ class TokenManager(private val context: Context) {
     suspend fun saveDEDOS(id: String) {
         context.dataStore.edit { preferences ->
             preferences[DEDOS_KEY] = id
-        }
-    }
-
-    // Guardar MAPA en DataStore
-    suspend fun saveMAPA(id: String) {
-        context.dataStore.edit { preferences ->
-            preferences[MAPA_KEY] = id
         }
     }
 
@@ -53,11 +45,6 @@ class TokenManager(private val context: Context) {
             preferences[DEDOS_KEY] ?: ""
         }
 
-    // Leer MAPA como Flow
-    val idMapa: Flow<String> = context.dataStore.data
-        .map { preferences ->
-            preferences[MAPA_KEY] ?: ""
-        }
 
 
 
@@ -66,7 +53,6 @@ class TokenManager(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences.remove(ID_KEY)
             preferences.remove(DEDOS_KEY)
-            preferences.remove(MAPA_KEY)
         }
     }
 
@@ -90,9 +76,6 @@ class TokenManager(private val context: Context) {
                 saveDEDOS(oldDedos)
             }
 
-            if (!oldMapa.isNullOrEmpty()) {
-                saveMAPA(oldMapa)
-            }
 
             sharedPrefs.edit().putBoolean("hasMigratedToDataStore", true).apply()
         }

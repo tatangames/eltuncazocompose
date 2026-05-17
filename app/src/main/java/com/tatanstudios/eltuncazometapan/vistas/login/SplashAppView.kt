@@ -48,6 +48,7 @@ import com.tatanstudios.eltuncazometapan.vistas.principal.carrito.EditarProducto
 import com.tatanstudios.eltuncazometapan.vistas.principal.ordenes.EstadoOrdenScreen
 import com.tatanstudios.eltuncazometapan.vistas.principal.productos.ElegirProductoScreen
 import com.tatanstudios.eltuncazometapan.vistas.principal.productos.EnviarOrdenScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.productos.ListadoProductosDeUnaOrdenScreen
 import com.tatanstudios.eltuncazometapan.vistas.principal.productos.ListadoProductosScreen
 
 class SplashApp : ComponentActivity() {
@@ -225,7 +226,16 @@ fun AppNavigation() {
             )
         }
 
+        // VISTA LISTADO PRODUCTOS DE UNA ORDEN
+        composable(Routes.VistaListaProductosDeOrden.route) { backStackEntry ->
 
+            val idorden = backStackEntry.arguments?.getString("idorden")?.toIntOrNull() ?: 0
+
+            ListadoProductosDeUnaOrdenScreen(
+                navController = navController,
+                idorden = idorden,
+            )
+        }
 
     }
 }

@@ -4,7 +4,6 @@ import com.tatanstudios.eltuncazometapan.model.modelos.ModeloCarrito
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloDatosBasicos
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloDirecciones
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloHistorialOrdenes
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloHorario
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloInfoProducto
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloInformacionOrdenParaEnviar
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloInformacionProducto
@@ -288,9 +287,9 @@ interface ApiService {
 
 
     // CANCELAR ORDEN ANTES DE INICIARSE
-    @POST("cliente/proceso/cancelar/orden")
+    @POST("cliente/proceso/orden/cancelar")
     @FormUrlEncoded
-    fun cancelarOrden(@Field("idorden") idorden: Int,
+    fun cancelarOrden(@Field("ordenid") idorden: Int,
     ): Single<ModeloDatosBasicos>
 
 
@@ -303,10 +302,9 @@ interface ApiService {
 
 
     // CALIFICAR ORDEN
-    @POST("cliente/orden/completar/calificacion")
+    @POST("cliente/proceso/completar/orden")
     @FormUrlEncoded
-    fun calificarOrden(@Field("ordenid") idorden: Int,
-                       @Field("valor") valor: Int,
+    fun completarOrden(@Field("ordenid") idorden: Int,
     ): Single<ModeloDatosBasicos>
 
 

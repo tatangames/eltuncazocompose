@@ -1,7 +1,6 @@
 package com.tatanstudios.eltuncazometapan.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,28 +9,18 @@ import com.tatanstudios.eltuncazometapan.extras.Event
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloCarrito
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloDatosBasicos
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloDirecciones
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloHistorialOrdenes
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloHorario
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloInfoProducto
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloInformacionOrdenParaEnviar
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloInformacionProducto
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloInformacionProductoEditar
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloMenuPrincipal
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloOrdenes
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloOrdenesIndividual
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloPoligonos
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloPremios
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloProductoHistorialOrdenes
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloProductos
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloProductosDeOrden
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.http.Field
 import kotlin.Int
-
-
-
 
 class LoginViewModel : ViewModel() {
     private val _usuario = MutableLiveData<String>()
@@ -1071,7 +1060,7 @@ class OcultarOrdenViewModel() : ViewModel() {
 }
 
 
-class CalificarOrdenViewModel() : ViewModel() {
+class CompletarOrdenViewModel() : ViewModel() {
 
     private val _resultado = MutableLiveData<Event<ModeloDatosBasicos>>()
     val resultado: LiveData<Event<ModeloDatosBasicos>> get() = _resultado
@@ -1082,13 +1071,13 @@ class CalificarOrdenViewModel() : ViewModel() {
     private var disposable: Disposable? = null
     private var isRequestInProgress = false
 
-    fun calificarOrdenRetrofit(ordenid: Int, valor: Int) {
+    fun completarOrdenRetrofit(ordenid: Int) {
         if (isRequestInProgress) return
 
         isRequestInProgress = true
 
         _isLoading.value = true
-        disposable = RetrofitBuilder.getApiService().calificarOrden(ordenid, valor)
+        disposable = RetrofitBuilder.getApiService().completarOrden(ordenid)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry()
@@ -1112,15 +1101,44 @@ class CalificarOrdenViewModel() : ViewModel() {
 }
 
 
+class ListadoProductosDeUnaOrdenViewModel() : ViewModel() {
 
+    private val _resultado = MutableLiveData<Event<ModeloProductosDeOrden>>()
+    val resultado: LiveData<Event<ModeloProductosDeOrden>> get() = _resultado
 
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private var disposable: Disposable? = null
+    private var isRequestInProgress = false
 
+    fun listadoProductosDeUnaOrdenRetrofit(idorden: Int) {
+        if (isRequestInProgress) return
 
+        isRequestInProgress = true
 
+        _isLoading.value = true
+        disposable = RetrofitBuilder.getApiService().listadoProductosOrden(idorden)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .retry()
+            .subscribe(
+                { response ->
+                    _isLoading.value = false
+                    _resultado.value = Event(response)
+                    isRequestInProgress = false
+                },
+                { error ->
+                    _isLoading.value = false
+                    isRequestInProgress = false
+                }
+            )
+    }
 
-
-
-
+    override fun onCleared() {
+        super.onCleared()
+        disposable?.dispose() // Limpiar la suscripción
+    }
+}
 
 
