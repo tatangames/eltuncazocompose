@@ -1,6 +1,5 @@
 package com.tatanstudios.eltuncazometapan.vistas.login
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Patterns
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -41,9 +38,7 @@ import androidx.navigation.NavHostController
 import com.tatanstudios.eltuncazometapan.R
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.LaunchedEffect
@@ -58,7 +53,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tatanstudios.eltuncazometapan.componentes.BloqueTextFieldCorreo
 import com.tatanstudios.eltuncazometapan.componentes.BloqueTextFieldLogin
 import com.tatanstudios.eltuncazometapan.componentes.BloqueTextFieldPassword
 import com.tatanstudios.eltuncazometapan.componentes.CustomModal1Boton
@@ -108,10 +102,8 @@ fun RegistroScreen(navController: NavHostController, viewModel: RegistroViewMode
     var showDialogApi by remember { mutableStateOf(false) }
 
     var showModal2Boton by remember { mutableStateOf(false) }
-    var idonesignal by remember { mutableStateOf("") }
 
     // Strings fuera de lambdas
-    val stringCorreoIngresadoNoValido = stringResource(R.string.correo_ingresado_no_es_valido)
     val stringUsuarioEsRequerido = stringResource(R.string.usuario_es_requerido)
     val stringPasswordEsRequerido = stringResource(R.string.password_es_requerido)
     val texto4CaracteresMinimo = stringResource(R.string.minimo_4_caracteres)
@@ -272,7 +264,7 @@ fun RegistroScreen(navController: NavHostController, viewModel: RegistroViewMode
         if (showDialogApi) {
             CustomModal1BotonTitulo(
                 showDialog = showDialogApi,
-                title = textoTituloApi,
+                title = textoTituloApi ,
                 message = textoMensajeApi,
                 onDismiss = { showDialogApi = false }
             )
@@ -299,9 +291,7 @@ fun RegistroScreen(navController: NavHostController, viewModel: RegistroViewMode
                 onAccept = {
                     showModal2Boton = false
                     scope.launch {
-                        viewModel.registroRetrofit(
-                            version = getVersionName(ctx)
-                        )
+                        viewModel.registroRetrofit()
                     }
                 },
                 stringResource(R.string.si),
@@ -313,8 +303,8 @@ fun RegistroScreen(navController: NavHostController, viewModel: RegistroViewMode
             when (result.success) {
                 1 -> {
                     // USUARIO YA REGISTRADO
-                    textoTituloApi = "Nota"
-                    textoMensajeApi = "Usuario ya Registrado"
+                    textoTituloApi = result.titulo ?: ""
+                    textoMensajeApi = result.mensaje ?: ""
                     showDialogApi = true
                 }
                 2 -> {
@@ -329,9 +319,6 @@ fun RegistroScreen(navController: NavHostController, viewModel: RegistroViewMode
     }
 }
 
-fun esCorreoValido(correo: String): Boolean {
-    return Patterns.EMAIL_ADDRESS.matcher(correo).matches()
-}
 
 fun getVersionName(context: Context): String {
     return try {

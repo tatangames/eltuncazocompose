@@ -25,8 +25,7 @@ sealed class Routes(val route: String) {
 
 
 
-    // VISTA MAPA
-    object VistaMapa: Routes("vistaMapa")
+
 
     // VISTA REGISTRO DE DIRECCION NUEVA
     object VistaRegistroDireccion: Routes("registroDireccionNueva/{id}/{latitud}/{longitud}/{latitudreal}/{longitudreal}") {
@@ -39,10 +38,57 @@ sealed class Routes(val route: String) {
         ) = "registroDireccionNueva/$id/$latitud/$longitud/${latitudreal ?: "none"}/${longitudreal ?: "none"}"
     }
 
+    // VISTA SELECCIONAR DIRECCION
+    object VistaSeleccionarDireccion: Routes("seleccionarDireccion/{id}/{nombre}/{telefono}/{direccion}/{referencia}") {
+        fun createRoute(
+            id: Int,
+            nombre: String,
+            telefono: String?,
+            direccion: String?,
+            referencia: String?
+        ) = "seleccionarDireccion/$id/$nombre/$telefono/${direccion}/${referencia}"
+    }
+
+    // VISTA LISTADO PRODUCTOS
+    object VistaListadoProductos : Routes("vistaListadoProductos/{idcategoria}") {
+        fun createRoute(
+            idcategoria: Int
+        ) = "vistaListadoProductos/$idcategoria"
+    }
+
+    // VISTA INFORMACION DE UN PRODUCTO
+    object VistaInformacionProducto : Routes("vistaInformacionProducto/{idproducto}") {
+        fun createRoute(
+            idproducto: Int
+        ) = "vistaInformacionProducto/$idproducto"
+    }
+
+    // VISTA CARRITO COMPRAS
+    object VistaCarrito: Routes("carrito")
 
 
+    // VISTA PARA EDITAR PRODUCTO
+    object VistaEditarProducto : Routes("vistaInformacionProductoEditar/{idfilacarrito}") {
+        fun createRoute(
+            idfilacarrito: Int
+        ) = "vistaInformacionProductoEditar/$idfilacarrito"
+    }
 
+    // VISTA PARA ENVIAR LA ORDEN
+    object VistaEnviarOrden: Routes("vistaEnviarOrden")
 
+    // VISTA PARA VER LOS ESTADOS DE UNA ORDEN
+    object VistaEstadoOrden : Routes("vistaEstadoOrden/{idorden}") {
+        fun createRoute(
+            idorden: Int
+        ) = "vistaEstadoOrden/$idorden"
+    }
 
+    // VISTA PARA VER LISTADO PRODUCTOS DE UNA ORDEN
+    object VistaListaProductosDeOrden : Routes("vistaListadoProductoOrden/{idorden}") {
+        fun createRoute(
+            idorden: Int
+        ) = "vistaListadoProductoOrden/$idorden"
+    }
 
 }

@@ -84,10 +84,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.36.0")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.36.0")
 
-    // Google Services
-    implementation("com.google.android.gms:play-services-auth:21.5.1")
-    implementation("com.google.android.gms:play-services-maps:20.0.0")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
+
 
     // Image Loading
     implementation("io.coil-kt:coil-compose:2.7.0")
@@ -99,20 +96,8 @@ dependencies {
     implementation("com.beust:klaxon:5.6")
 
 
-    // Maps
-    implementation("com.google.maps.android:maps-compose:4.3.3")
-    implementation("com.github.prabhat1707:EasyWayLocation:2.4")
-
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore")
-
-    implementation("com.github.imperiumlabs:GeoFirestore-Android:v1.5.0")
-    implementation("com.google.maps.android:android-maps-utils:2.3.0")
 
 
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

@@ -4,19 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,26 +20,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -69,7 +50,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -83,14 +63,9 @@ import com.tatanstudios.eltuncazometapan.componentes.LoadingModal
 import com.tatanstudios.eltuncazometapan.componentes.ToastType
 import com.tatanstudios.eltuncazometapan.extras.TokenManager
 import com.tatanstudios.eltuncazometapan.model.modelos.ModeloMenuPrincipalCategoriasArray
-import com.tatanstudios.eltuncazometapan.model.modelos.ModeloMenuPrincipalPopularesArray
 import com.tatanstudios.eltuncazometapan.model.rutas.Routes
-import com.tatanstudios.eltuncazometapan.ui.theme.ColorBlanco
-import com.tatanstudios.eltuncazometapan.ui.theme.ColorGris
 import com.tatanstudios.eltuncazometapan.viewmodel.ListadoMenuPrincipal
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -153,7 +128,16 @@ fun MenuPrincipalScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 6.dp)
-                        .clickable { },
+                        .clickable {
+                            navController.navigate(
+                                Routes.VistaListadoProductos.createRoute(categoria.id)
+                            ) {
+                                popUpTo(Routes.VistaListadoProductos.route) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        },
                     shape = RoundedCornerShape(16.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -166,7 +150,7 @@ fun MenuPrincipalScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(160.dp)
+                                .aspectRatio(16f / 9f)  // en lugar de height fijo
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                                 .background(Color(0xFFF5F5F5)),
                             contentAlignment = Alignment.Center

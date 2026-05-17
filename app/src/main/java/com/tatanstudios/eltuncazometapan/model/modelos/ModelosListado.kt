@@ -262,7 +262,8 @@ data class ModeloCarrito(
     @SerializedName("success") val success: Int,
     @SerializedName("subtotal") val subTotal: String?,
     @SerializedName("estadoProductoGlobal") val estadoProductoGlobal: Int,
-    @SerializedName("producto") val listadoCarritoTemporal: List<ModeloCarritoTemporal>
+    @SerializedName("producto") val listadoCarritoTemporal: List<ModeloCarritoTemporal>,
+    @SerializedName("hayDireccionRegistrada") val hayDireccionRegistrada: Int,
 )
 
 data class ModeloCarritoTemporal(
@@ -329,8 +330,8 @@ data class ModeloOrdenesArray(
     @SerializedName("id_cliente") val idCliente: Int,
     @SerializedName("id_servicio") val idServicio: Int,
     @SerializedName("id_zona") val idZona: Int,
-    @SerializedName("nota_orden") val notaOrden: String?,
-    @SerializedName("total_orden") val totalOrden: String?,
+    @SerializedName("nota") val notaOrden: String?,
+    @SerializedName("total") val total: String?,
     @SerializedName("fecha_orden") val fechaOrden: String?,
     @SerializedName("fecha_estimada") val fechaEstimada: String?,
     @SerializedName("estado_iniciada") val estadoIniciada: Int,
@@ -343,7 +344,7 @@ data class ModeloOrdenesArray(
     @SerializedName("fecha_entregada") val fechaEntregada: String?,
     @SerializedName("estado_cancelada") val estadoCancelada: Int,
     @SerializedName("fecha_cancelada") val fechaCancelada: String?,
-    @SerializedName("nota_cancelada") val notaCancelada: String?,
+    @SerializedName("mensaje_cancelada") val mensajeCancelado: String?,
     @SerializedName("id_cupones") val idCupones: Int?,
     @SerializedName("total_cupon") val totalCupon: String?,
     @SerializedName("mensaje_cupon") val mensajeCupon: String?,

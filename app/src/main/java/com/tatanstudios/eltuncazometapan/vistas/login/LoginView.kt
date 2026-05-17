@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -40,9 +39,7 @@ import androidx.navigation.NavHostController
 import com.tatanstudios.eltuncazometapan.R
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -55,24 +52,17 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tatanstudios.eltuncazometapan.componentes.BloqueTextFieldLogin
 import com.tatanstudios.eltuncazometapan.componentes.BloqueTextFieldPassword
 import com.tatanstudios.eltuncazometapan.componentes.CustomModal1Boton
-import com.tatanstudios.eltuncazometapan.componentes.CustomToasty
 import com.tatanstudios.eltuncazometapan.componentes.LoadingModal
-import com.tatanstudios.eltuncazometapan.componentes.ToastType
 import com.tatanstudios.eltuncazometapan.extras.TokenManager
 import com.tatanstudios.eltuncazometapan.model.rutas.Routes
 import com.tatanstudios.eltuncazometapan.viewmodel.LoginViewModel
-
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.shadow
 import androidx.compose.foundation.layout.Arrangement
-
-
-import kotlinx.coroutines.launch
+import androidx.compose.ui.draw.clip
 
 
 @SuppressLint("LocalContextGetResourceValueCall")
@@ -150,14 +140,16 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = vi
                     Box(
                         modifier = Modifier
                             .size(130.dp)
-                            .background(Color.White, shape = CircleShape)
-                            .shadow(8.dp, shape = CircleShape),
+                            .shadow(8.dp, shape = CircleShape)
+                            .background(Color.White, shape = CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.logoapp),
                             contentDescription = stringResource(id = R.string.descripcion_negocio),
-                            modifier = Modifier.size(110.dp)
+                            modifier = Modifier
+                                .size(110.dp)
+                                .clip(CircleShape)
                         )
                     }
                 }
@@ -305,6 +297,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = vi
 
             when (result.success) {
                 1 -> {
+                    // INICIO DE SESION
                     navegarAPrincipal = result.id.toString()
                 }
                 else -> {

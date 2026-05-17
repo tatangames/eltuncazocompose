@@ -810,7 +810,7 @@ fun CardMisDirecciones(
                         Spacer(modifier = Modifier.width(8.dp))
 
                         Text(
-                            text = nombre,
+                            text = "Nombre: $nombre",
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -821,7 +821,7 @@ fun CardMisDirecciones(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = direccion,
+                        text = "Dirección: $direccion",
                         style = TextStyle(
                             fontSize = 16.sp,
                             color = Color.DarkGray

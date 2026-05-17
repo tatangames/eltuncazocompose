@@ -30,9 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.tatanstudios.eltuncazometapan.model.rutas.Routes
 import com.tatanstudios.eltuncazometapan.vistas.opciones.menu.MenuPrincipalScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.ordenes.ListadoOrdenesScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -53,13 +55,13 @@ fun PrincipalScreen(navController: NavHostController, selectedScreenVar: String)
     val openCart = {
         if (canClickCart) {
             canClickCart = false
-            /*navController.navigate(Routes.VistaCarrito.route) {
+            navController.navigate(Routes.VistaCarrito.route) {
                 launchSingleTop = true
             }
             scope.launch {
                 delay(500)
                 canClickCart = true
-            }*/
+            }
         }
     }
 
@@ -98,7 +100,7 @@ fun PrincipalScreen(navController: NavHostController, selectedScreenVar: String)
                 )
             )
             "ordenes" -> {
-                //ListadoOrdenesScreen(navController)
+                ListadoOrdenesScreen(navController)
             }
         }
     }
@@ -136,11 +138,14 @@ fun BottomAppBarWithCart(
                 Icon(
                     painter = painterResource(id = R.drawable.icono_comida),
                     contentDescription = stringResource(R.string.menu),
-                    tint = if (isSelected) Color.Red else Color.Gray
+                    tint = if (isSelected)
+                        colorResource(id = R.color.colorAppPrimary)
+                    else
+                        Color.Gray
                 )
                 Text(
                     text = stringResource(R.string.menu),
-                    color = if (isSelected) Color.Red else Color.Gray,
+                    color = if (isSelected) colorResource(id = R.color.colorAppPrimary) else Color.Gray,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )
             }
@@ -158,11 +163,11 @@ fun BottomAppBarWithCart(
                 Icon(
                     painter = painterResource(id = R.drawable.icono_comida),
                     contentDescription = stringResource(R.string.ordenes),
-                    tint = if (isSelected) Color.Red else Color.Gray
+                    tint = if (isSelected) colorResource(id = R.color.colorAppPrimary) else Color.Gray
                 )
                 Text(
                     text = stringResource(R.string.ordenes),
-                    color = if (isSelected) Color.Red else Color.Gray,
+                    color = if (isSelected) colorResource(id = R.color.colorAppPrimary) else Color.Gray,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )
             }

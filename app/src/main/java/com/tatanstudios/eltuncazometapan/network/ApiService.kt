@@ -26,18 +26,17 @@ import retrofit2.http.POST
 interface ApiService {
 
     // VERIFICACION DE NUMERO
-    @POST("cliente/login/v2")
+    @POST("cliente/login")
     @FormUrlEncoded
     fun verificarUsuarioPassword(@Field("usuario") telefono: String,
                           @Field("password") password: String,
                           ): Single<ModeloDatosBasicos>
 
     // REGISTRARSE
-    @POST("cliente/registro/v2")
+    @POST("cliente/registro")
     @FormUrlEncoded
     fun registrarme(@Field("usuario") telefono: String,
-                    @Field("password") password: String,
-                    @Field("version") version: String?
+                    @Field("password") password: String
     ): Single<ModeloDatosBasicos>
 
 
@@ -45,7 +44,7 @@ interface ApiService {
 
     //*****************************************************************************
     // LISTA MENU PRINCIPAL
-    @POST("cliente/lista/servicios-bloque/v2")
+    @POST("cliente/lista/servicios-bloque")
     @FormUrlEncoded
     fun listadoMenuPrincipal(@Field("id") id: String,
     ): Single<ModeloMenuPrincipal>
@@ -84,7 +83,20 @@ interface ApiService {
 
                                 ): Single<ModeloDatosBasicos>
 
+    // SELECCIONAR DIRECCION
+    @POST("cliente/seleccionar/direccion")
+    @FormUrlEncoded
+    fun seleccionarDireccion(@Field("id") id: String,
+                             @Field("dirid") dirid: Int,
+    ): Single<ModeloDatosBasicos>
 
+
+    // BORRAR DIRECCION
+    @POST("cliente/eliminar/direccion")
+    @FormUrlEncoded
+    fun borrarDireccion(@Field("id") id: String,
+                        @Field("dirid") dirid: Int,
+    ): Single<ModeloDatosBasicos>
 
 
 
@@ -128,85 +140,18 @@ interface ApiService {
     ): Single<ModeloInfoProducto>
 
 
-    // LISTADO DE HORARIOS
-    @POST("cliente/informacion/restaurante/horario")
-    @FormUrlEncoded
-    fun listadoHorario(@Field("id") id: String,
-    ): Single<ModeloHorario>
-
-
-    // LISTADO DE PREMIOS
-    @POST("cliente/premios/listado")
-    @FormUrlEncoded
-    fun listadoPremios(@Field("clienteid") clienteid: String,
-    ): Single<ModeloPremios>
-
-
-    // SELECCIONAR PREMIO
-    @POST("cliente/premios/seleccionar")
-    @FormUrlEncoded
-    fun seleccionarPremios(@Field("clienteid") clienteid: String,
-                           @Field("idpremio") idpremio: Int,
-    ): Single<ModeloDatosBasicos>
-
-
-    // QUITAR SELECCION PREMIO
-    @POST("cliente/premios/deseleccionar")
-    @FormUrlEncoded
-    fun quitarSeleccionarPremios(@Field("clienteid") clienteid: String,
-    ): Single<ModeloDatosBasicos>
-
-
-
-
-
-
-
-
-
-    // SELECCIONAR DIRECCION
-    @POST("cliente/direcciones/elegir/direccion")
-    @FormUrlEncoded
-    fun seleccionarDireccion(@Field("id") id: String,
-                             @Field("dirid") dirid: Int,
-    ): Single<ModeloDatosBasicos>
-
-
-    // BORRAR DIRECCION
-    @POST("cliente/eliminar/direccion/seleccionada")
-    @FormUrlEncoded
-    fun borrarDireccion(@Field("id") id: String,
-                             @Field("dirid") dirid: Int,
-    ): Single<ModeloDatosBasicos>
-
-
-    // INFORMACION DEL USUARIO
-    @POST("cliente/informacion/personal")
-    @FormUrlEncoded
-    fun informacionUsuario(@Field("id") id: String,
-    ): Single<ModeloDatosBasicos>
-
-
-    // ACTUALIZAR CORREO DEL USUARIO
-    @POST("cliente/actualizar/correo/v2")
-    @FormUrlEncoded
-    fun actualizarCorreoUsuario(@Field("id") id: String,
-                                @Field("usuario") usuario: String,
-                                @Field("correo") correo: String,
-    ): Single<ModeloDatosBasicos>
-
 
     // LISTADO DE PRODUCTOS DE UNA CATEGORIA
-    @POST("cliente/listado/productos/servicios")
+    @POST("cliente/servicios/listado/menu")
     @FormUrlEncoded
-    fun listadoProductos(@Field("id") idcategoria: Int,
+    fun listadoProductos(@Field("categoria") idcategoria: Int,
     ): Single<ModeloProductos>
 
 
     // INFORMACION DE UN PRODUCTO PARA METER AL CARRITO
-    @POST("cliente/informacion/producto/individual")
+    @POST("cliente/informacion/producto")
     @FormUrlEncoded
-    fun informacionProducto(@Field("id") idproducto: Int,
+    fun informacionProducto(@Field("productoid") idproducto: Int,
     ): Single<ModeloInformacionProducto>
 
 
@@ -218,6 +163,36 @@ interface ApiService {
                                  @Field("cantidad") cantidad: Int,
                                  @Field("notaproducto") notaproducto: String?,
     ): Single<ModeloDatosBasicos>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // LISTADO CARRITO DE COMPRAS
@@ -276,14 +251,11 @@ interface ApiService {
 
 
     // ENVIAR ORDEN FINAL
-    @POST("cliente/proceso/enviar/orden")
+    @POST("cliente/proceso/orden/estado-1")
     @FormUrlEncoded
     fun enviarOrdenFinal(@Field("clienteid") idcliente: String,
                          @Field("nota") nota: String?,
-                         @Field("cupon") cupon: String?,
-                         @Field("aplicacupon") aplicacupon: Int?,
                          @Field("version") version: String?,
-                         @Field("idfirebase") idfirebase: String?,
     ): Single<ModeloDatosBasicos>
 
 
@@ -295,14 +267,14 @@ interface ApiService {
 
 
     /// LISTADO DE ORDENES
-    @POST("cliente/ordenes/listado/activas")
+    @POST("cliente/ver/ordenes-activas")
     @FormUrlEncoded
     fun listadoOrdenes(@Field("clienteid") clienteid: String,
     ): Single<ModeloOrdenes>
 
 
     // INFORMACION DE UNA ORDEN PARA VER LOS ESTADOS
-    @POST("cliente/orden/informacion/estado")
+    @POST("cliente/ver/estado-orden")
     @FormUrlEncoded
     fun informacionOrdenIndividual(@Field("ordenid") ordenid: Int,
     ): Single<ModeloOrdenesIndividual>
@@ -323,10 +295,11 @@ interface ApiService {
 
 
     // OCULTAR UNA ORDEN COMPLETADA
-    @POST("cliente/ocultar/mi/orden")
+    @POST("cliente/proceso/finalizar/orden")
     @FormUrlEncoded
     fun ocultarOrden(@Field("ordenid") idorden: Int,
     ): Single<ModeloDatosBasicos>
+
 
 
     // CALIFICAR ORDEN
@@ -335,7 +308,6 @@ interface ApiService {
     fun calificarOrden(@Field("ordenid") idorden: Int,
                        @Field("valor") valor: Int,
     ): Single<ModeloDatosBasicos>
-
 
 
 

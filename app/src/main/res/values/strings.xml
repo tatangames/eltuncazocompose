@@ -180,7 +180,8 @@
     <string name="cancelar_orden">Cancelar Orden</string>
     <string name="cargando_cobertura">Cargando Cobertura</string>
 
-
+    <string name="agregar_direccion_para_continuar">Necesitas agregar una dirección para continuar</string>
+    <string name="toca_para_agregar_direccion">Toca aquí para agregar una dirección</string>
 
     <string name="logo">Logo</string>
     <string name="logotipo">Logotipo</string>

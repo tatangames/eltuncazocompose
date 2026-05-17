@@ -37,12 +37,18 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.tatanstudios.eltuncazometapan.componentes.RobotoMediumFont
 import com.tatanstudios.eltuncazometapan.extras.TokenManager
-import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones.MapaScreen
 import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones.MisDireccionesScreen
 import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones.RegistrarNuevaDireccionScreen
+import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones.SeleccionarDireccionScreen
 import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.password.ActualizarPasswordScreen
 import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.perfil.PerfilScreen
 import com.tatanstudios.eltuncazometapan.vistas.principal.PrincipalScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.carrito.CarritoComprasScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.carrito.EditarProductoScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.ordenes.EstadoOrdenScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.productos.ElegirProductoScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.productos.EnviarOrdenScreen
+import com.tatanstudios.eltuncazometapan.vistas.principal.productos.ListadoProductosScreen
 
 class SplashApp : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,7 +134,6 @@ fun AppNavigation() {
 
 
         // VISTA MAPA
-        composable(Routes.VistaMapa.route) { MapaScreen(navController) }
 
         // VISTA REGISTRAR NUEVA DIRECCION
         composable(Routes.VistaRegistroDireccion.route) { backStackEntry ->
@@ -151,6 +156,76 @@ fun AppNavigation() {
                 longitudreal = longitudreal
             )
         }
+
+        // VISTA SELECCIONAR DIRECCION
+        composable(Routes.VistaSeleccionarDireccion.route) { backStackEntry ->
+
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            val telefono = backStackEntry.arguments?.getString("telefono") ?: ""
+            val direccion = backStackEntry.arguments?.getString("direccion") ?: ""
+            val referencia = backStackEntry.arguments?.getString("referencia") ?: ""
+
+            SeleccionarDireccionScreen(
+                navController = navController,
+                id = id,
+                nombre,
+                telefono,
+                direccion,
+                referencia
+            )
+        }
+
+        // VISTA LISTADO DE PRODUCTOS
+        composable(
+            route = Routes.VistaListadoProductos.route,
+            arguments = listOf(
+                navArgument("idcategoria") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val idCategoria = backStackEntry.arguments?.getInt("idcategoria") ?: 0
+
+            ListadoProductosScreen(
+                navController = navController,
+                idCategoria = idCategoria
+            )
+        }
+
+        // VISTA INFORMACION PRODUCTO
+        composable(Routes.VistaInformacionProducto.route) { backStackEntry ->
+            val idproductoStr = backStackEntry.arguments?.getString("idproducto") ?: "0"
+            val idproducto = idproductoStr.toIntOrNull() ?: 0
+
+            ElegirProductoScreen(navController = navController, idProducto = idproducto)
+        }
+
+        // VISTA CARRITO DE COMPRAS
+        composable(Routes.VistaCarrito.route) { CarritoComprasScreen(navController) }
+
+        // VISTA INFORMACION PRODUCTO PARA EDITARLO
+        composable(Routes.VistaEditarProducto.route) { backStackEntry ->
+            val idfilaCarritoStr = backStackEntry.arguments?.getString("idfilacarrito") ?: "0"
+            val idfilaCarrito = idfilaCarritoStr.toIntOrNull() ?: 0
+
+            EditarProductoScreen(navController = navController, idfilaCarrito)
+        }
+
+        // VISTA ENVIAR ORDEN
+        composable(Routes.VistaEnviarOrden.route) { EnviarOrdenScreen(navController) }
+
+
+        // VISTA ESTADO ORDENES
+        composable(Routes.VistaEstadoOrden.route) { backStackEntry ->
+
+            val idorden = backStackEntry.arguments?.getString("idorden")?.toIntOrNull() ?: 0
+
+            EstadoOrdenScreen(
+                navController = navController,
+                idorden = idorden,
+            )
+        }
+
+
 
     }
 }
