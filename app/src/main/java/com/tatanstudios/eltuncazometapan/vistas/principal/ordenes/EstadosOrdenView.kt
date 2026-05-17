@@ -1,5 +1,6 @@
 package com.tatanstudios.eltuncazometapan.vistas.principal.ordenes
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -101,6 +102,11 @@ fun EstadoOrdenScreen(
     }
 
     val pullRefreshState = rememberPullRefreshState(refreshing, { recargar() })
+
+    // Dentro del composable, antes del Scaffold:
+    BackHandler {
+        navController.popBackStack()
+    }
 
     Scaffold(
         topBar = {

@@ -26,7 +26,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -240,15 +242,19 @@ fun AppNavigation() {
     }
 }
 
+
 @Composable
 fun SplashScreen(navController: NavHostController) {
 
     val ctx = LocalContext.current
     val tokenManager = remember { TokenManager(ctx) }
 
-    // Ejecutar la migración desde SharedPreferences solo una vez
+    var migracionLista by remember { mutableStateOf(false) }
+
+    // Primero ejecutar la migración
     LaunchedEffect(Unit) {
-        //tokenManager.migrateFromSharedPreferencesIfNeeded()
+        tokenManager.migrateFromSharedPreferencesIfNeeded()
+        migracionLista = true
     }
 
     val idusuario by tokenManager.idUsuario.collectAsState(initial = "")
@@ -260,16 +266,15 @@ fun SplashScreen(navController: NavHostController) {
         }
     }
 
-    // Control de la navegación tras un retraso
-    LaunchedEffect(idusuario) {
-        delay(3000)
+    // Navegar solo cuando migración esté lista
+    LaunchedEffect(migracionLista, idusuario) {
+        if (!migracionLista) return@LaunchedEffect
+
+        delay(2000)
 
         if (idusuario.isNotEmpty()) {
-            navController.navigate(Routes.VistaPrincipal.createRoute("menu")
-            ) {
-                popUpTo(Routes.VistaSplash.route) {
-                    inclusive = true
-                }
+            navController.navigate(Routes.VistaPrincipal.createRoute("menu")) {
+                popUpTo(Routes.VistaSplash.route) { inclusive = true }
                 launchSingleTop = true
             }
         } else {
@@ -285,7 +290,6 @@ fun SplashScreen(navController: NavHostController) {
             .background(color = Color.White),
         contentAlignment = Alignment.Center
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -293,7 +297,6 @@ fun SplashScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo
             Image(
                 painter = painterResource(id = R.drawable.logoapp),
                 contentDescription = null,
@@ -302,7 +305,6 @@ fun SplashScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Texto justo debajo del logo
             Text(
                 text = stringResource(id = R.string.app_name),
                 fontSize = 26.sp,

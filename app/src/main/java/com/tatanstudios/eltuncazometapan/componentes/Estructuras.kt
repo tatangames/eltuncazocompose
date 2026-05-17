@@ -1000,42 +1000,32 @@ fun BarraToolbarColorOrdenesEstado(navController: NavController, titulo: String,
                 fontWeight = FontWeight.Medium,
             )
         },
-
         navigationIcon = {
             IconButton(
                 onClick = {
                     if (!isNavigating) {
                         isNavigating = true
-
-                       /* navController.navigate(Routes.VistaPrincipal.createRoute("ordenes")
-                        ) {
-                            popUpTo(Routes.VistaEstadoOrden.route) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }*/
+                        navController.popBackStack()
                     }
                 },
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
                     contentDescription = stringResource(id = R.string.atras),
-                    tint = Color.White // Color del ícono de navegación
+                    tint = Color.White
                 )
             }
         },
-        actions = {
-            // Puedes agregar acciones adicionales aquí si lo necesitas
-        },
+        actions = {},
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = backgroundColor, // Color de fondo de la barra
-            navigationIconContentColor = Color.White, // Color del ícono de navegación
-            titleContentColor = Color.White, // Color del título
-            actionIconContentColor = Color.White // Color de las acciones
+            containerColor = backgroundColor,
+            navigationIconContentColor = Color.White,
+            titleContentColor = Color.White,
+            actionIconContentColor = Color.White
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .requiredHeightIn(min = 56.dp) // Define una altura mínima
+            .requiredHeightIn(min = 56.dp)
     )
 }
 

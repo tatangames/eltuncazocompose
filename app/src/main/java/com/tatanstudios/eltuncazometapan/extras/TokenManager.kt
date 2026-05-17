@@ -64,19 +64,10 @@ class TokenManager(private val context: Context) {
         val hasMigrated = sharedPrefs.getBoolean("hasMigratedToDataStore", false)
 
         if (!hasMigrated) {
-            val oldId = sharedPrefs.getString("ID", null)
-            val oldDedos = sharedPrefs.getString("DEDOS", null)
-            val oldMapa = sharedPrefs.getString("MAPA", null)
+            // Borrar DataStore por si acaso quedó algo
+            context.dataStore.edit { it.clear() }
 
-            if (!oldId.isNullOrEmpty()) {
-                saveID(oldId)
-            }
-
-            if (!oldDedos.isNullOrEmpty()) {
-                saveDEDOS(oldDedos)
-            }
-
-
+            // Marcar que ya se limpió para no repetir
             sharedPrefs.edit().putBoolean("hasMigratedToDataStore", true).apply()
         }
     }

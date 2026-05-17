@@ -10,12 +10,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitBuilder {
 
     //** SERVIDOR
-    //private const val BASE_URL = "http://165.22196.71/api/"
-    //const val urlImagenes = "http://165.227.71/storage/imagenes/"
+    private const val BASE_URL = "http://165.22.176.229/api/"
+    const val urlImagenes = "http://165.22.176.229/storage/imagenes/"
 
     //** LOCAL
-    private const val BASE_URL = "http://192.168.1.4:8080/api/"
-    const val urlImagenes = "http://192.168.1.4:8080/storage/imagenes/"
+    //private const val BASE_URL = "http://192.168.1.4:8080/api/"
+    // const val urlImagenes = "http://192.168.1.4:8080/storage/imagenes/"
 
     private var retrofit: Retrofit? = null
     private var apiService: ApiService? = null

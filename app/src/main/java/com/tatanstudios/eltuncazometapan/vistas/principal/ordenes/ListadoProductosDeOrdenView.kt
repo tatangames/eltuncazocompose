@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.tatanstudios.eltuncazometapan.extras.TokenManager
 import kotlinx.coroutines.launch
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -49,6 +47,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Card
 import androidx.compose.ui.draw.clip
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -57,21 +56,19 @@ import com.tatanstudios.eltuncazometapan.model.modelos.ModeloProductosDeOrdenArr
 import com.tatanstudios.eltuncazometapan.viewmodel.ListadoProductosDeUnaOrdenViewModel
 
 @Composable
-fun ListadoProductosDeUnaOrdenScreen(navController: NavHostController,
-                           idorden: Int,
-                           viewModel: ListadoProductosDeUnaOrdenViewModel = viewModel()
+fun ListadoProductosDeUnaOrdenScreen(
+    navController: NavHostController,
+    idorden: Int,
+    viewModel: ListadoProductosDeUnaOrdenViewModel = viewModel()
 ) {
-
     val ctx = LocalContext.current
     var boolDatosCargados by remember { mutableStateOf(false) }
     val isLoading by viewModel.isLoading.observeAsState(true)
-    val tokenManager = remember { TokenManager(ctx) }
     val resultado by viewModel.resultado.observeAsState()
-    val scope = rememberCoroutineScope() // Crea el alcance de coroutine
+    val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var modeloListaProductosArray: List<ModeloProductosDeOrdenArray> by remember { mutableStateOf(listOf<ModeloProductosDeOrdenArray>()) }
-
+    var modeloListaProductosArray: List<ModeloProductosDeOrdenArray> by remember { mutableStateOf(listOf()) }
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -79,19 +76,14 @@ fun ListadoProductosDeUnaOrdenScreen(navController: NavHostController,
         }
     }
 
-    // ocultar teclado
     keyboardController?.hide()
-
-
-
-
 
     Scaffold(
         topBar = {
             BarraToolbarColor(
-                navController,
-                stringResource(R.string.productos),
-                colorResource(R.color.colorAppPrimary),
+                navController = navController,
+                titulo = stringResource(R.string.productos),
+                backgroundColor = colorResource(R.color.colorAppPrimary),
             )
         }
     ) { innerPadding ->
@@ -102,53 +94,56 @@ fun ListadoProductosDeUnaOrdenScreen(navController: NavHostController,
                 .padding(innerPadding)
         ) {
             if (boolDatosCargados) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    // Si quisieras un encabezado extra:
-                    // item { Text("Productos de la orden", style = MaterialTheme.typography.titleMedium) }
-
-                    items(
-                        items = modeloListaProductosArray,
-                        key = { it.id } // ajusta al campo único de tu modelo
-                    ) { producto ->
-                        ProductoItemCardDeOrden(
-                            producto = producto,
-                            onClick = {
-                                // tu lógica aquí
-                            }
+                if (modeloListaProductosArray.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "No hay productos",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.Gray
                         )
                     }
-
-                    // Si quisieras un footer:
-                    // item { Spacer(Modifier.height(24.dp)) }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        itemsIndexed(
+                            items = modeloListaProductosArray,
+                            key = { index, item -> "${item.id}_$index" }
+                        ) { _, producto ->
+                            ProductoItemCardDeOrden(
+                                producto = producto,
+                                onClick = { }
+                            )
+                        }
+                    }
                 }
             }
-        }
 
-        if (isLoading) LoadingModal(isLoading = true)
+            if (isLoading) LoadingModal(isLoading = true)
 
-        resultado?.getContentIfNotHandled()?.let { result ->
-            when (result.success) {
-                1 -> {
-                    modeloListaProductosArray = result.productos
-                    boolDatosCargados = true
-                }
-
-                else -> {
-                    CustomToasty(
-                        ctx,
-                        stringResource(id = R.string.error_reintentar_de_nuevo),
-                        ToastType.ERROR
-                    )
+            resultado?.getContentIfNotHandled()?.let { result ->
+                when (result.success) {
+                    1 -> {
+                        modeloListaProductosArray = result.productos
+                        boolDatosCargados = true
+                    }
+                    else -> {
+                        CustomToasty(
+                            ctx,
+                            stringResource(id = R.string.error_reintentar_de_nuevo),
+                            ToastType.ERROR
+                        )
+                    }
                 }
             }
         }
     }
-
-
 }
 
 
@@ -161,7 +156,7 @@ fun ProductoItemCardDeOrden(
     var traeImagen = (producto.utiliza_imagen == 1)
     if (producto.imagen.isNullOrBlank()) traeImagen = false
 
-    val imageSlot = 96.dp // ancho reservado para la imagen + padding
+    val imageSlot = 96.dp
 
     Card(
         modifier = Modifier
@@ -174,7 +169,6 @@ fun ProductoItemCardDeOrden(
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
 
-            // Texto: reservamos espacio a la derecha para la imagen
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -188,7 +182,6 @@ fun ProductoItemCardDeOrden(
                     fontWeight = FontWeight.SemiBold,
                     color = colorResource(id = R.color.colorNegro)
                 )
-
 
                 Text(
                     text = "Precio: $${producto.precio}",
@@ -211,7 +204,7 @@ fun ProductoItemCardDeOrden(
                     color = colorResource(id = R.color.colorNegro)
                 )
 
-                if(!producto.nota.isNullOrBlank()){
+                if (!producto.nota.isNullOrBlank()) {
                     Text(
                         text = "Nota: ${producto.nota}",
                         style = MaterialTheme.typography.bodyMedium,
@@ -219,13 +212,11 @@ fun ProductoItemCardDeOrden(
                         color = colorResource(id = R.color.colorRojo)
                     )
                 }
-
             }
 
-            // Imagen: CENTRADA verticalmente a la derecha
             Box(
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)   // <-- clave
+                    .align(Alignment.CenterEnd)
                     .padding(end = 10.dp)
                     .size(72.dp)
             ) {
@@ -246,9 +237,9 @@ fun ProductoItemCardDeOrden(
                         painter = painterResource(id = R.drawable.camaradefecto),
                         contentDescription = producto.nombreproducto,
                         modifier = Modifier
-                            .size(72.dp)                 // 👈 define tamaño cuadrado
-                            .clip(CircleShape)           // 👈 recorta en forma de círculo
-                            .border(2.dp, Color.LightGray, CircleShape), // 👈 borde opcional
+                            .size(72.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.LightGray, CircleShape),
                         contentScale = ContentScale.Crop
                     )
                 }

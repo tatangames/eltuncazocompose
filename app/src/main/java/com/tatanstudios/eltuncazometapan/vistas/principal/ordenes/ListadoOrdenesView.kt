@@ -239,8 +239,7 @@ fun ListadoOrdenesScreen(
 
                                     if (esCancelada) {
                                         Text(
-                                            text = "Cancelada: " + orden.mensajeCancelado,
-                                            style = MaterialTheme.typography.titleMedium,
+                                            text = "Cancelada: ${orden.mensajeCancelado ?: ""}",                                            style = MaterialTheme.typography.titleMedium,
                                             color = Color.Red,
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Medium
