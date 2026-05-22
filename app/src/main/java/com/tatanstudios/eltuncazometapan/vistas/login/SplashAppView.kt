@@ -39,11 +39,11 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.tatanstudios.eltuncazometapan.componentes.RobotoMediumFont
 import com.tatanstudios.eltuncazometapan.extras.TokenManager
-import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones.MisDireccionesScreen
-import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones.RegistrarNuevaDireccionScreen
-import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones.SeleccionarDireccionScreen
-import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.password.ActualizarPasswordScreen
-import com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.perfil.PerfilScreen
+import com.tatanstudios.eltuncazometapan.vistas.opciones.direcciones.MisDireccionesScreen
+import com.tatanstudios.eltuncazometapan.vistas.opciones.direcciones.RegistrarNuevaDireccionScreen
+import com.tatanstudios.eltuncazometapan.vistas.opciones.direcciones.SeleccionarDireccionScreen
+import com.tatanstudios.eltuncazometapan.vistas.opciones.password.ActualizarPasswordScreen
+import com.tatanstudios.eltuncazometapan.vistas.opciones.perfil.PerfilScreen
 import com.tatanstudios.eltuncazometapan.vistas.principal.PrincipalScreen
 import com.tatanstudios.eltuncazometapan.vistas.principal.carrito.CarritoComprasScreen
 import com.tatanstudios.eltuncazometapan.vistas.principal.carrito.EditarProductoScreen

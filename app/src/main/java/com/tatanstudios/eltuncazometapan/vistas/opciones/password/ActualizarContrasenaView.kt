@@ -1,4 +1,4 @@
-package com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.password
+package com.tatanstudios.eltuncazometapan.vistas.opciones.password
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background

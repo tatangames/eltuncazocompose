@@ -1,4 +1,4 @@
-package com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones
+package com.tatanstudios.eltuncazometapan.vistas.opciones.direcciones
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -436,11 +436,6 @@ fun MisDireccionesScreen(
                                     scope.launch {
                                         registroViewModel.registrarNuevaDireccionRetrofit(
                                             idusuario,
-                                            "0",    // idzona — ajusta según tu lógica
-                                            "0.0",  // latitud
-                                            "0.0",  // longitud
-                                            null,
-                                            null
                                         )
                                     }
                                 }

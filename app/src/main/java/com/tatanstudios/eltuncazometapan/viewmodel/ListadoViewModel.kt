@@ -331,11 +331,6 @@ class RegistroNuevaDireccionViewModel() : ViewModel() {
 
     fun registrarNuevaDireccionRetrofit(
         idusuario: String,
-        idzona: String,
-        latitud: String,
-        longitud: String,
-        latitudreal: String?,
-        longitudreal: String?
     ) {
         if (isRequestInProgress) return
 
@@ -347,11 +342,6 @@ class RegistroNuevaDireccionViewModel() : ViewModel() {
         nombre: ${_nombre.value}
         direccion: ${_direccion.value}
         puntoReferencia: ${_puntoReferencia.value}
-        idzona: $idzona
-        latitud: $latitud
-        longitud: $longitud
-        latitudreal: $latitudreal
-        longitudreal: $longitudreal
         telefono: ${_telefono.value}
     """.trimIndent())
 
@@ -360,11 +350,6 @@ class RegistroNuevaDireccionViewModel() : ViewModel() {
             _nombre.value ?: "",           // 👈 evita crash si es null
             _direccion.value ?: "",        // 👈
             _puntoReferencia.value ?: "",  // 👈 este es el más probable que cause crash
-            idzona,
-            latitud,
-            longitud,
-            latitudreal,
-            longitudreal,
             _telefono.value ?: ""          // 👈
         )
             .subscribeOn(Schedulers.io())
@@ -1036,7 +1021,7 @@ class OcultarOrdenViewModel() : ViewModel() {
         isRequestInProgress = true
 
         _isLoading.value = true
-        disposable = RetrofitBuilder.getApiService().ocultarOrden(ordenid)
+        disposable = RetrofitBuilder.getApiService().completarOrden(ordenid)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry()

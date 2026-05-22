@@ -70,7 +70,6 @@ fun ListadoProductosScreen(navController: NavHostController,
     val ctx = LocalContext.current
     var boolDatosCargados by remember { mutableStateOf(false) }
     val isLoading by viewModel.isLoading.observeAsState(true)
-    val tokenManager = remember { TokenManager(ctx) }
     val resultado by viewModel.resultado.observeAsState()
     val scope = rememberCoroutineScope() // Crea el alcance de coroutine
     val keyboardController = LocalSoftwareKeyboardController.current

@@ -61,11 +61,6 @@ interface ApiService {
     fun listadoDirecciones(@Field("id") id: String,
     ): Single<ModeloDirecciones>
 
-    // LISTADO ZONA POLIGONOS
-    @GET("listado/zonas/poligonos")
-    fun listadoPoligonos(
-    ): Single<ModeloPoligonos>
-
     // REGISTRAR NUEVA DIRECCION
     @POST("cliente/nueva/direccion")
     @FormUrlEncoded
@@ -73,11 +68,6 @@ interface ApiService {
                                 @Field("nombre") nombre: String,
                                 @Field("direccion") direccion: String,
                                 @Field("punto_referencia") puntoReferencia: String?,
-                                @Field("zona_id") idzona: String,
-                                @Field("latitud") latitud: String,
-                                @Field("longitud") longitud: String,
-                                @Field("latitudreal") latitudreal: String?,
-                                @Field("longitudreal") longitudreal: String?,
                                 @Field("telefono") telefono: String,
 
                                 ): Single<ModeloDatosBasicos>
@@ -97,46 +87,6 @@ interface ApiService {
                         @Field("dirid") dirid: Int,
     ): Single<ModeloDatosBasicos>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // LISTADO DE ORDENES DE HISTORIAL SEGUN FECHA
-    @POST("cliente/historial/listado/ordenes")
-    @FormUrlEncoded
-    fun listadoHistorialOrdenes(@Field("id") id: String,
-                                @Field("fecha1") fecha1: String,
-                                @Field("fecha2") fecha2: String,
-    ): Single<ModeloHistorialOrdenes>
-
-
-    // LISTADO DE PRODUCTOS DE UNA ORDEN
-    @POST("cliente/listado/productos/ordenes")
-    @FormUrlEncoded
-    fun listadoProductosHistorialOrden(@Field("ordenid") ordenid: Int,
-    ): Single<ModeloProductoHistorialOrdenes>
-
-
-    // INFO DE UN PRODUCTO DE UNA ORDEN
-    @POST("cliente/listado/productos/ordenes-individual")
-    @FormUrlEncoded
-    fun infoProductosHistorialOrden(@Field("idordendescrip") idordendescrip: Int,
-    ): Single<ModeloInfoProducto>
 
 
 
@@ -162,35 +112,6 @@ interface ApiService {
                                  @Field("cantidad") cantidad: Int,
                                  @Field("notaproducto") notaproducto: String?,
     ): Single<ModeloDatosBasicos>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -241,14 +162,6 @@ interface ApiService {
     ): Single<ModeloInformacionOrdenParaEnviar>
 
 
-    // VERIFICAR CUPON
-    @POST("cliente/verificar/cupon")
-    @FormUrlEncoded
-    fun verificarCupon(@Field("clienteid") idcliente: String,
-                       @Field("cupon") cupon: String
-    ): Single<ModeloDatosBasicos>
-
-
     // ENVIAR ORDEN FINAL
     @POST("cliente/proceso/orden/estado-1")
     @FormUrlEncoded
@@ -258,11 +171,6 @@ interface ApiService {
     ): Single<ModeloDatosBasicos>
 
 
-    // ENVIAR NOTIFICACION A RESTAURANTE POR ENVIAR ORDEN
-    @POST("cliente/proceso/orden/notificacion")
-    @FormUrlEncoded
-    fun enviarNotificacionRestaurante(@Field("id") id: Int,
-    ): Single<ModeloDatosBasicos>
 
 
     /// LISTADO DE ORDENES
@@ -293,15 +201,7 @@ interface ApiService {
     ): Single<ModeloDatosBasicos>
 
 
-    // OCULTAR UNA ORDEN COMPLETADA
-    @POST("cliente/proceso/finalizar/orden")
-    @FormUrlEncoded
-    fun ocultarOrden(@Field("ordenid") idorden: Int,
-    ): Single<ModeloDatosBasicos>
-
-
-
-    // CALIFICAR ORDEN
+    // COMPLETAR ORDEN
     @POST("cliente/proceso/completar/orden")
     @FormUrlEncoded
     fun completarOrden(@Field("ordenid") idorden: Int,

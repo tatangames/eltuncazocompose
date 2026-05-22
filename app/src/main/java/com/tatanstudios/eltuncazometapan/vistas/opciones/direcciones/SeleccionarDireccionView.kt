@@ -1,4 +1,4 @@
-package com.tatanstudios.eltuncazometapan.vistas.opciones.opciones.direcciones
+package com.tatanstudios.eltuncazometapan.vistas.opciones.direcciones
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource

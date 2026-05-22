@@ -23,18 +23,6 @@ data class ModeloMenuPrincipal(
     @SerializedName("servicios") val arrayCategorias: List<ModeloMenuPrincipalCategoriasArray>,
 )
 
-data class ModeloMenuPrincipalSliderArray(
-    @SerializedName("id") val id: Int,
-    @SerializedName("id_producto") val idProducto: Int,
-    @SerializedName("id_servicios") val idServicios: Int,
-    @SerializedName("nombre") val nombre: String?,
-    @SerializedName("imagen") val imagen: String?,
-    @SerializedName("redireccionamiento") val redireccionamiento: Int,
-    @SerializedName("usa_horario") val usaHorario: Int,
-    @SerializedName("hora_abre") val horaAbre: String?,
-    @SerializedName("hora_cierra") val horaCierra: String?,
-    @SerializedName("activo") val activo: Int,
-)
 
 data class ModeloMenuPrincipalCategoriasArray(
     @SerializedName("id") val id: Int,
